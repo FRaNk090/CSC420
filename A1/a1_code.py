@@ -25,7 +25,7 @@ def gaussian_filter(size: int, sig: float):
     # taking product of 1d gaussian vector will give us 2D gaussian filter matrix
     gaussian_2d = np.outer(gaussian, gaussian)
 
-    return gaussian_2d
+    return gaussian_2d / gaussian_2d.sum()
 
 
 plt.imshow(gaussian_filter(50, 10))
