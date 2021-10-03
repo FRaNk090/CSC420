@@ -1,12 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-
-# img = cv2.imread('./A1_images/image2.jpg')
-
-# cv2.imshow('image', img)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+from PIL import Image
 
 
 def gaussian_filter(size: int, sig: float):
@@ -27,12 +22,110 @@ def gaussian_filter(size: int, sig: float):
 
     # normalize the entries
     gaussian_2d /= gaussian_2d.sum()
-    plt.imshow(gaussian_2d, cmap='gray')
-    plt.colorbar()
-    plt.show()
-
     return gaussian_2d
 
 
+def convolution(image, filter):
+    assert filter.shape[0] == filter.shape[1], 'filter has to be k by k'
+    # flip the fiter first
+    filter = np.flip(filter)
+    k = filter.shape[0]
+    m, n = image.shape
+    # Since I'm doing valid option here, so the result img size will be smaller
+    m = m - k + 1
+    n = n - k + 1
+    res = np.zeros((m, n))
+    # loop through each entry to calculate the result
+    for i in range(m):
+        for j in range(n):
+            res[i][j] = np.sum(image[i:i + k, j:j + k] * filter)
+    return res
+
+
+def gradient_magnitude(image):
+    # input image is already in gray scale
+    # define sober filter
+    sober_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
+    sober_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
+    # using covolution with sober matrix to get derivatives.
+    g_x = convolution(image, sober_x)
+    g_y = convolution(image, sober_y)
+    # Calculate gradient matrix
+    res = np.sqrt(g_x ** 2 + g_y ** 2)
+    return res
+
+
+def threshold(image, epsilon):
+    # calcutate the matrix mean
+    t = image.mean()
+    # initial value of t_{i - 1} should be inf so the first iteration will start
+    t_last = float('inf')
+    while abs(t - t_last) > epsilon:
+        t_last = t
+        # calcutate low average and high average with last t value
+        low_avg = image.mean(where=image < t_last)
+        high_avg = image.mean(where=image >= t_last)
+        t = (low_avg + high_avg) / 2
+    # map every entry to 0 or 255 based on the condition
+    mapping_func = np.vectorize(lambda x: 255 if x >= t else 0)
+    res = mapping_func(image)
+    return res
+
+
 if __name__ == '__main__':
-    gaussian_filter(50, 12)
+    gaussian = gaussian_filter(25, 5)
+    fig = plt.figure(figsize=(16, 8), constrained_layout=True)
+    # fig, axes = plt.subplots(nrows=4, ncols=4)
+    fig.tight_layout()
+
+    fig.add_subplot(4, 4, 1)
+    plt.imshow(gaussian, cmap='gray')
+    plt.colorbar()
+    plt.title('Gaussian Filter')
+
+    for i in range(1, 4):
+        ax = [None for _ in range(4)]
+        img = Image.open(f'./A1_images/image{i}.jpg')
+        img = np.array(img)
+        ax[0] = fig.add_subplot(4, 4, 4 * i + 1)
+        ax[0].imshow(img)
+        ax[0].title.set_text('original image')
+        ax[0].set_xticks([]), ax[0].set_yticks([])
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = convolution(gray, gaussian)
+        ax[1] = fig.add_subplot(4, 4, 4 * i + 2)
+        ax[1].imshow(img, cmap='gray')
+        ax[1].title.set_text('After gaussian blur')
+        ax[1].set_xticks([]), ax[1].set_yticks([])
+        img = gradient_magnitude(img)
+        ax[2] = fig.add_subplot(4, 4, 4 * i + 3)
+        ax[2].imshow(img, cmap='gray')
+        ax[2].title.set_text('Gradient magnitude')
+        ax[2].set_xticks([]), ax[2].set_yticks([])
+        img = threshold(img, 0.01)
+        ax[3] = fig.add_subplot(4, 4, 4 * i + 4)
+        ax[3].imshow(img, cmap='gray')
+        ax[3].title.set_text('After thresholding')
+        ax[3].set_xticks([]), ax[3].set_yticks([])
+    plt.show()
+    # img = threshold(img, 0.1)
+    # mapping_func = np.vectorize(lambda x: 255 if x >= 2 else 0)
+    # a = np.array([[1, 2], [3, 4]])
+    # print(a.mean(where=a > 1))
+    # print(mapping_func(a))
+    # a = np.array([[1, 2], [2, 3]])
+    # b = np.array([[1, 3], [3, 6]])
+    # print(np.flip(a))
+    # w = 10
+    # h = 10
+
+    # columns = 4
+    # rows = 5
+    # for _ in range(2):
+    #     fig = plt.figure(figsize=(10, 10))
+    #     for i in range(1, columns*rows + 1):
+    #         img = np.random.randint(10, size=(h, w))
+    #         fig.add_subplot(rows, columns, 1)
+    #         plt.imshow(img)
+    #     plt.show()
+    # pass
