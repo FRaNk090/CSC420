@@ -73,10 +73,12 @@ def threshold(image, epsilon):
 
 
 if __name__ == '__main__':
-    gaussian = gaussian_filter(25, 5)
+    SIZE = 25
+    SIGMA = 5
+    EPSILON = 0.0001
+    gaussian = gaussian_filter(SIZE, SIGMA)
+
     fig = plt.figure(figsize=(16, 8), constrained_layout=True)
-    # fig, axes = plt.subplots(nrows=4, ncols=4)
-    fig.tight_layout()
 
     fig.add_subplot(4, 4, 1)
     plt.imshow(gaussian, cmap='gray')
@@ -87,45 +89,39 @@ if __name__ == '__main__':
         ax = [None for _ in range(4)]
         img = Image.open(f'./A1_images/image{i}.jpg')
         img = np.array(img)
+
+        print(f'The shape of original image {i} is ', img.shape)
+        # Creating original image
         ax[0] = fig.add_subplot(4, 4, 4 * i + 1)
         ax[0].imshow(img)
         ax[0].title.set_text('original image')
         ax[0].set_xticks([]), ax[0].set_yticks([])
+
+        # Convert it to gray scale and apply gaussian blur
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = convolution(gray, gaussian)
         ax[1] = fig.add_subplot(4, 4, 4 * i + 2)
         ax[1].imshow(img, cmap='gray')
         ax[1].title.set_text('After gaussian blur')
         ax[1].set_xticks([]), ax[1].set_yticks([])
+        print(
+            f'The shape of image {i} after applying gaussian blur is ', img.shape)
+
+        # Calculating gradient magnitude
         img = gradient_magnitude(img)
         ax[2] = fig.add_subplot(4, 4, 4 * i + 3)
         ax[2].imshow(img, cmap='gray')
         ax[2].title.set_text('Gradient magnitude')
         ax[2].set_xticks([]), ax[2].set_yticks([])
-        img = threshold(img, 0.01)
+        print(
+            f'The shape of image {i} after taking gradient magnitude is ', img.shape)
+
+        # Apply the threshold
+        img = threshold(img, EPSILON)
         ax[3] = fig.add_subplot(4, 4, 4 * i + 4)
         ax[3].imshow(img, cmap='gray')
         ax[3].title.set_text('After thresholding')
         ax[3].set_xticks([]), ax[3].set_yticks([])
+        print(
+            f'The shape of image {i} after applying threshold is ', img.shape)
     plt.show()
-    # img = threshold(img, 0.1)
-    # mapping_func = np.vectorize(lambda x: 255 if x >= 2 else 0)
-    # a = np.array([[1, 2], [3, 4]])
-    # print(a.mean(where=a > 1))
-    # print(mapping_func(a))
-    # a = np.array([[1, 2], [2, 3]])
-    # b = np.array([[1, 3], [3, 6]])
-    # print(np.flip(a))
-    # w = 10
-    # h = 10
-
-    # columns = 4
-    # rows = 5
-    # for _ in range(2):
-    #     fig = plt.figure(figsize=(10, 10))
-    #     for i in range(1, columns*rows + 1):
-    #         img = np.random.randint(10, size=(h, w))
-    #         fig.add_subplot(rows, columns, 1)
-    #         plt.imshow(img)
-    #     plt.show()
-    # pass
