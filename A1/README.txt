@@ -21,4 +21,4 @@ Note that:
     i) The original image.
     ii) The image after taking gaussian blur.
     iii) The image after taking gradient magnitude.
-    ix) The iamge after applying threshold.
+    ix) The image after applying threshold.
