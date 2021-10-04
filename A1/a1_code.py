@@ -73,11 +73,13 @@ def threshold(image, epsilon):
 
 
 if __name__ == '__main__':
-    SIZE = 10
-    SIGMA = 3
+    SIZE_1 = 10
+    SIGMA_1 = 3
+    SIZE_2 = 25
+    SIGMA_2 = 5
     EPSILON = 0.0001
-    gaussian = gaussian_filter(SIZE, SIGMA)
-    gaussian_2 = gaussian_filter(25, 5)
+    gaussian = gaussian_filter(SIZE_1, SIGMA_1)
+    gaussian_2 = gaussian_filter(SIZE_2, SIGMA_2)
 
     fig = plt.figure(figsize=(16, 8), constrained_layout=True)
 

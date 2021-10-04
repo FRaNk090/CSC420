@@ -14,7 +14,7 @@ If error ouccurs, try things listed below:
 
 
 Note that:
-1. In lines 76 -78, you can vary the parameter values test the functionalities
+1. In lines 76 - 80, you can vary the parameter values test the functionalities. Size must be an integer
 2. The shapes of images in each step are printed out in terminal.
 3. If run successfully, it will show 1 gaussian filter image and 4 plots for each image in the A1_images folder. 13 in total.
 4. There are 4 columns:
