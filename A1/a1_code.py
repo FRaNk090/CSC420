@@ -73,8 +73,8 @@ def threshold(image, epsilon):
 
 
 if __name__ == '__main__':
-    SIZE = 25
-    SIGMA = 5
+    SIZE = 10
+    SIGMA = 3
     EPSILON = 0.0001
     gaussian = gaussian_filter(SIZE, SIGMA)
 
