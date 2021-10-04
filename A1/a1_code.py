@@ -77,11 +77,17 @@ if __name__ == '__main__':
     SIGMA = 3
     EPSILON = 0.0001
     gaussian = gaussian_filter(SIZE, SIGMA)
+    gaussian_2 = gaussian_filter(25, 5)
 
     fig = plt.figure(figsize=(16, 8), constrained_layout=True)
 
     fig.add_subplot(4, 4, 1)
     plt.imshow(gaussian, cmap='gray')
+    plt.colorbar()
+    plt.title('Gaussian Filter')
+
+    fig.add_subplot(4, 4, 3)
+    plt.imshow(gaussian_2, cmap='gray')
     plt.colorbar()
     plt.title('Gaussian Filter')
 
