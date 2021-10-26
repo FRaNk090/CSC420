@@ -1,0 +1,53 @@
+Sequential(
+  (0): Linear(in_features=2352, out_features=1000, bias=True)
+  (1): ReLU()
+  (2): Dropout(p=0.5, inplace=False)
+  (3): Linear(in_features=1000, out_features=10, bias=True)
+  (4): Softmax(dim=1)
+)
+Epoch: 0        100.00% complete. 7.74 seconds elapsed in epoch.
+Epoch: 0        Training Loss: 1.7506   Validation Loss: 1.6038
+                Training Accuracy: 74.20%        Validation Accuracy: 86.70%
+Epoch: 1        100.00% complete. 7.63 seconds elapsed in epoch.
+Epoch: 1        Training Loss: 1.6548   Validation Loss: 1.5836
+                Training Accuracy: 81.48%        Validation Accuracy: 88.40%
+Epoch: 2        100.00% complete. 7.62 seconds elapsed in epoch.
+Epoch: 2        Training Loss: 1.6389   Validation Loss: 1.5727
+                Training Accuracy: 82.73%        Validation Accuracy: 89.70%
+Epoch: 3        100.00% complete. 7.58 seconds elapsed in epoch.
+Epoch: 3        Training Loss: 1.6076   Validation Loss: 1.5764
+                Training Accuracy: 86.00%        Validation Accuracy: 89.20%
+Epoch: 4        100.00% complete. 7.57 seconds elapsed in epoch.
+Epoch: 4        Training Loss: 1.5890   Validation Loss: 1.5680
+                Training Accuracy: 87.71%        Validation Accuracy: 89.80%
+Epoch: 5        100.00% complete. 7.61 seconds elapsed in epoch.
+Epoch: 5        Training Loss: 1.5830   Validation Loss: 1.5683
+                Training Accuracy: 88.11%        Validation Accuracy: 89.40%
+Epoch: 6        100.00% complete. 7.56 seconds elapsed in epoch.
+Epoch: 6        Training Loss: 1.5783   Validation Loss: 1.5660
+                Training Accuracy: 88.71%        Validation Accuracy: 89.90%
+Epoch: 7        100.00% complete. 7.59 seconds elapsed in epoch.
+Epoch: 7        Training Loss: 1.5748   Validation Loss: 1.5591
+                Training Accuracy: 88.97%        Validation Accuracy: 90.60%
+Epoch: 8        100.00% complete. 7.61 seconds elapsed in epoch.
+Epoch: 8        Training Loss: 1.5711   Validation Loss: 1.5596
+                Training Accuracy: 89.29%        Validation Accuracy: 90.40%
+Epoch: 9        100.00% complete. 7.59 seconds elapsed in epoch.
+Epoch: 9        Training Loss: 1.5685   Validation Loss: 1.5585
+                Training Accuracy: 89.55%        Validation Accuracy: 90.30%
+Epoch: 10       100.00% complete. 7.57 seconds elapsed in epoch.
+Epoch: 10       Training Loss: 1.5686   Validation Loss: 1.5579
+                Training Accuracy: 89.46%        Validation Accuracy: 90.40%
+Epoch: 11       100.00% complete. 7.61 seconds elapsed in epoch.
+Epoch: 11       Training Loss: 1.5654   Validation Loss: 1.5530
+                Training Accuracy: 89.74%        Validation Accuracy: 91.20%
+Epoch: 12       100.00% complete. 7.59 seconds elapsed in epoch.
+Epoch: 12       Training Loss: 1.5628   Validation Loss: 1.5590
+                Training Accuracy: 90.01%        Validation Accuracy: 90.30%
+Epoch: 13       100.00% complete. 7.57 seconds elapsed in epoch.
+Epoch: 13       Training Loss: 1.5634   Validation Loss: 1.5585
+                Training Accuracy: 90.03%        Validation Accuracy: 90.50%
+
+Early Stopping! Total epochs: 13. Best epoch: 11 with loss: 1.55
+110.19 total seconds elapsed. 7.87 seconds per epoch.
+The test loss is 1.581805121355995. The test accuracy is 87.89%

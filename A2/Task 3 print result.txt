@@ -1,0 +1,111 @@
+Sequential(
+  (0): Linear(in_features=2352, out_features=100, bias=True)
+  (1): ReLU()
+  (2): Linear(in_features=100, out_features=10, bias=True)
+  (3): Softmax(dim=1)
+)
+Training for size: 100
+Epoch: 0        100.00% complete. 5.55 seconds elapsed in epoch.
+Epoch: 0        Training Loss: 1.7563   Validation Loss: 1.6621
+                Training Accuracy: 73.99%        Validation Accuracy: 81.20%
+Epoch: 1        100.00% complete. 5.57 seconds elapsed in epoch.
+Epoch: 1        Training Loss: 1.6118   Validation Loss: 1.6167
+                Training Accuracy: 86.12%        Validation Accuracy: 85.50%
+Epoch: 2        100.00% complete. 5.57 seconds elapsed in epoch.
+Epoch: 2        Training Loss: 1.5910   Validation Loss: 1.6035
+                Training Accuracy: 87.84%        Validation Accuracy: 86.60%
+Epoch: 3        100.00% complete. 5.55 seconds elapsed in epoch.
+Epoch: 3        Training Loss: 1.5821   Validation Loss: 1.5982
+                Training Accuracy: 88.53%        Validation Accuracy: 86.70%
+Epoch: 4        100.00% complete. 5.54 seconds elapsed in epoch.
+Epoch: 4        Training Loss: 1.5753   Validation Loss: 1.6126
+                Training Accuracy: 89.19%        Validation Accuracy: 84.80%
+Epoch: 5        100.00% complete. 5.53 seconds elapsed in epoch.
+Epoch: 5        Training Loss: 1.5712   Validation Loss: 1.5984
+                Training Accuracy: 89.45%        Validation Accuracy: 86.40%
+
+Early Stopping! Total epochs: 5. Best epoch: 3 with loss: 1.60
+34.80 total seconds elapsed. 5.80 seconds per epoch.
+
+Sequential(
+  (0): Linear(in_features=2352, out_features=500, bias=True)
+  (1): ReLU()
+  (2): Linear(in_features=500, out_features=10, bias=True)
+  (3): Softmax(dim=1)
+)
+Training for size: 500
+Epoch: 0        100.00% complete. 6.46 seconds elapsed in epoch.
+Epoch: 0        Training Loss: 1.7451   Validation Loss: 1.7111
+                Training Accuracy: 74.79%        Validation Accuracy: 75.20%
+Epoch: 1        100.00% complete. 6.52 seconds elapsed in epoch.
+Epoch: 1        Training Loss: 1.6420   Validation Loss: 1.6946
+                Training Accuracy: 82.79%        Validation Accuracy: 77.10%
+Epoch: 2        100.00% complete. 6.64 seconds elapsed in epoch.
+Epoch: 2        Training Loss: 1.6295   Validation Loss: 1.6886
+                Training Accuracy: 83.82%        Validation Accuracy: 77.60%
+Epoch: 3        100.00% complete. 6.51 seconds elapsed in epoch.
+Epoch: 3        Training Loss: 1.6194   Validation Loss: 1.6851
+                Training Accuracy: 84.74%        Validation Accuracy: 77.80%
+Epoch: 4        100.00% complete. 6.53 seconds elapsed in epoch.
+Epoch: 4        Training Loss: 1.6158   Validation Loss: 1.6663
+                Training Accuracy: 84.93%        Validation Accuracy: 79.70%
+Epoch: 5        100.00% complete. 6.49 seconds elapsed in epoch.
+Epoch: 5        Training Loss: 1.5830   Validation Loss: 1.5919
+                Training Accuracy: 88.33%        Validation Accuracy: 87.70%
+Epoch: 6        100.00% complete. 6.50 seconds elapsed in epoch.
+Epoch: 6        Training Loss: 1.5655   Validation Loss: 1.5868
+                Training Accuracy: 90.12%        Validation Accuracy: 87.60%
+Epoch: 7        100.00% complete. 6.51 seconds elapsed in epoch.
+Epoch: 7        Training Loss: 1.5610   Validation Loss: 1.5863
+                Training Accuracy: 90.45%        Validation Accuracy: 87.30%
+Epoch: 8        100.00% complete. 6.50 seconds elapsed in epoch.
+Epoch: 8        Training Loss: 1.5566   Validation Loss: 1.5873
+                Training Accuracy: 90.77%        Validation Accuracy: 87.80%
+Epoch: 9        100.00% complete. 6.53 seconds elapsed in epoch.
+Epoch: 9        Training Loss: 1.5521   Validation Loss: 1.5866
+                Training Accuracy: 91.37%        Validation Accuracy: 87.90%
+
+Early Stopping! Total epochs: 9. Best epoch: 7 with loss: 1.59
+67.82 total seconds elapsed. 6.78 seconds per epoch.
+
+Sequential(
+  (0): Linear(in_features=2352, out_features=1000, bias=True)
+  (1): ReLU()
+  (2): Linear(in_features=1000, out_features=10, bias=True)
+  (3): Softmax(dim=1)
+)
+Training for size: 1000
+Epoch: 0        100.00% complete. 7.56 seconds elapsed in epoch.
+Epoch: 0        Training Loss: 1.7114   Validation Loss: 1.6346
+                Training Accuracy: 78.73%        Validation Accuracy: 84.10%
+Epoch: 1        100.00% complete. 7.56 seconds elapsed in epoch.
+Epoch: 1        Training Loss: 1.6012   Validation Loss: 1.6038
+                Training Accuracy: 87.10%        Validation Accuracy: 85.90%
+Epoch: 2        100.00% complete. 7.59 seconds elapsed in epoch.
+Epoch: 2        Training Loss: 1.5858   Validation Loss: 1.6022
+                Training Accuracy: 88.32%        Validation Accuracy: 86.80%
+Epoch: 3        100.00% complete. 7.56 seconds elapsed in epoch.
+Epoch: 3        Training Loss: 1.5761   Validation Loss: 1.5952
+                Training Accuracy: 89.15%        Validation Accuracy: 86.90%
+Epoch: 4        100.00% complete. 7.49 seconds elapsed in epoch.
+Epoch: 4        Training Loss: 1.5701   Validation Loss: 1.5888
+                Training Accuracy: 89.59%        Validation Accuracy: 88.00%
+Epoch: 5        100.00% complete. 7.56 seconds elapsed in epoch.
+Epoch: 5        Training Loss: 1.5662   Validation Loss: 1.5850
+                Training Accuracy: 90.03%        Validation Accuracy: 88.00%
+Epoch: 6        100.00% complete. 7.58 seconds elapsed in epoch.
+Epoch: 6        Training Loss: 1.5601   Validation Loss: 1.5828
+                Training Accuracy: 90.60%        Validation Accuracy: 88.40%
+Epoch: 7        100.00% complete. 7.60 seconds elapsed in epoch.
+Epoch: 7        Training Loss: 1.5569   Validation Loss: 1.5836
+                Training Accuracy: 90.83%        Validation Accuracy: 88.20%
+Epoch: 8        100.00% complete. 7.55 seconds elapsed in epoch.
+Epoch: 8        Training Loss: 1.5537   Validation Loss: 1.5839
+                Training Accuracy: 91.19%        Validation Accuracy: 87.70%
+
+Early Stopping! Total epochs: 8. Best epoch: 6 with loss: 1.58
+70.47 total seconds elapsed. 7.83 seconds per epoch.
+
+The validation loss are 1.5982, 1.5863, 1.5828
+The best model has 1000 units in hidden layer
+The test loss is 1.5748151756068158. The test accuracy is 89.24%
