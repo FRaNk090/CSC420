@@ -93,6 +93,17 @@ def homogeneous_transformation(points, h):
     return result_point
 
 
+def image_transformation(image1, image2, h):
+    h, w, _ = image1.shape
+    pad = 25
+    result_image = np.zeros((h + 2 * pad, w + 2 * pad, 3))
+    for y in range(result_image.shape[0]):
+        for x in range(result_image.shape[1]):
+            if y in range(pad, result_image.shape[0] - pad) and x in range(pad, result_image.shape[1] - pad):
+                result_image[y][x][0] = image1[y][x][0]
+            result_point = homogeneous_transformation()
+
+
 if __name__ == '__main__':
 
     #  =======  part2 Q4 ==========
@@ -120,3 +131,7 @@ if __name__ == '__main__':
     #     cv2.rectangle(image2, (x - 10, y - 10), (x + 10, y + 10), (255,0,0), 3)
     # plt.imshow(image2)
     # plt.show()
+<< << << < HEAD
+== == == =
+
+>>>>>> > 260a131887b8ffb7b1a06e993d81343b393a32b9

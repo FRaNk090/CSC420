@@ -1,5 +1,7 @@
-# import numpy as np
-# import cv2 as cv
+import numpy as np
+import matplotlib.pyplot as plt
+from numpy.lib.function_base import angle
+import cv2
 # cap = cv.VideoCapture(0)
 # ret, frame1 = cap.read()
 # prvs = cv.cvtColor(frame1, cv.COLOR_BGR2GRAY)
@@ -23,41 +25,47 @@
 #         cv.imwrite('opticalhsv.png', bgr)
 #     prvs = next
 
-import os
-import ffmpeg
+# image = cv2.imread('./A3/Q3/1.jpg')
+# gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+# print(gray.shape)
+# print(np.cos(np.pi / 2))
+# x_pos = [10, 10]
+# y_pos = [10, 10]
+# x_direct = [np.cos(np.pi / 6) * 30, np.cos(np.pi / 2) * 10]
+# y_direct = [np.sin(np.pi / 6) * 30, np.sin(np.pi / 2) * 10]
+
+# # plt.imshow(gray, cmap='gray')
+# plt.quiver(x_pos, y_pos, x_direct, y_direct, 1,
+#            headlength=0, headwidth=1, pivot='mid')
+
+# plt.show()
 
 
-def compress_video(video_full_path, output_file_name, target_size):
-    # Reference: https://en.wikipedia.org/wiki/Bit_rate#Encoding_bit_rate
-    min_audio_bitrate = 32000
-    max_audio_bitrate = 256000
+def retriving_mag_and_angle(image):
+    gx = cv2.Sobel(image, cv2.CV_32F, 1, 0)
+    gy = cv2.Sobel(image, cv2.CV_32F, 0, 1)
+    # Calculate the magnitude and angle for sourc.e image
+    mag, angle = cv2.cartToPolar(gx, gy, angleInDegrees=True)
+    # Convert direct angle to indirect angle
 
-    probe = ffmpeg.probe(video_full_path)
-    # Video duration, in s.
-    duration = float(probe['format']['duration'])
-    # Audio bitrate, in bps.
-    audio_bitrate = float(next(
-        (s for s in probe['streams'] if s['codec_type'] == 'audio'), None)['bit_rate'])
-    # Target total bitrate, in bps.
-    target_total_bitrate = (target_size * 1024 * 8) / (1.073741824 * duration)
-
-    # Target audio bitrate, in bps
-    if 10 * audio_bitrate > target_total_bitrate:
-        audio_bitrate = target_total_bitrate / 10
-        if audio_bitrate < min_audio_bitrate < target_total_bitrate:
-            audio_bitrate = min_audio_bitrate
-        elif audio_bitrate > max_audio_bitrate:
-            audio_bitrate = max_audio_bitrate
-    # Target video bitrate, in bps.
-    video_bitrate = target_total_bitrate - audio_bitrate
-
-    i = ffmpeg.input(video_full_path)
-    ffmpeg.output(i, os.devnull,
-                  **{'c:v': 'libx264', 'b:v': video_bitrate, 'pass': 1, 'f': 'mp4'}
-                  ).overwrite_output().run()
-    ffmpeg.output(i, output_file_name,
-                  **{'c:v': 'libx264', 'b:v': video_bitrate, 'pass': 2, 'c:a': 'aac', 'b:a': audio_bitrate}
-                  ).overwrite_output().run()
+    # def convert_to_indirect_angle(x):
+    #     if x >= 165 and x < 345:
+    #         return x - 180
+    #     elif x >= 345:
+    #         return x - 360
+    #     else:
+    #         return x
+    # convert_to_indirect_angle = np.vectorize(convert_to_indirect_angle)
+    # angle = convert_to_indirect_angle(angle)
+    # Threshold magnitude
+    t = 0
+    threshold = np.vectorize(lambda x: x if x >= t else 0)
+    mag = threshold(mag)
+    # plt.imshow(mag, cmap='gray')
+    # plt.show()
+    return mag, angle
 
 
-compress_video('input.mp4', 'output.mp4', 50 * 1000)
+a = np.array([1, 2])
+b = np.array([3, 4])
+print(a * b)
