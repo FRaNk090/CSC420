@@ -7,13 +7,12 @@ from scipy import ndimage
 import mplcursors
 from numpy import linalg as LA
 
-
 def get_points_selected(gray1, gray2):
     '''Return the selected points on two figures
     '''
 
     # Create figure
-    fig = plt.figure(figsize=(12, 4), constrained_layout=True)
+    fig= plt.figure(figsize=(12, 4), constrained_layout=True)
     ax = [None for _ in range(2)]
 
     ax[0] = fig.add_subplot(1, 2, 1)
@@ -25,7 +24,6 @@ def get_points_selected(gray1, gray2):
     points_1 = []
     points_2 = []
     # Define call back event when click on fig
-
     def on_click(sel):
         x = int(sel.target_[0])
         y = int(sel.target_[1])
@@ -46,7 +44,6 @@ def get_points_selected(gray1, gray2):
     assert len(points_2) >= 4, 'You should select more than 4 points on figure 2'
     return points_1, points_2
 
-
 def matrix_for_point(point1, point2):
     '''Given a pair of point, produce a 2 x 9 matrix.
         x, y, 1, 0, 0, 0, -x'x, -x'y, -x'
@@ -64,7 +61,7 @@ def calculate_homography_matrix(points_1, points_2):
     # Make sure that the number of points in 2 groups are the same
     assert len(points_1) == len(points_2), "Number of points must be the same"
     length = len(points_1)
-    # Stack the matrix
+    # Stack the matrix 
     A_matrix = np.array([[]]).reshape((0, 9))
     for i in range(length):
         point_matrix = matrix_for_point(points_1[i], points_2[i])
@@ -73,9 +70,8 @@ def calculate_homography_matrix(points_1, points_2):
     m = np.matmul(A_matrix.T, A_matrix)
     w, v = LA.eig(m)
     smallest_index = np.argmin(w)
-    h = v[:, smallest_index].reshape((3, 3))
+    h = v[ :, smallest_index].reshape((3, 3))
     return h
-
 
 def homogeneous_transformation(points, h):
     '''Given a list of points, return the points after
@@ -89,9 +85,8 @@ def homogeneous_transformation(points, h):
         point = np.array(point)
         res = np.matmul(h, point)
         result_point.append(np.round((res / res[2])[:2]).astype(int))
-
+    
     return result_point
-
 
 def image_transformation(image1, image2, h):
     h, w, _ = image1.shape
@@ -101,9 +96,7 @@ def image_transformation(image1, image2, h):
         for x in range(result_image.shape[1]):
             if y in range(pad, result_image.shape[0] - pad) and x in range(pad, result_image.shape[1] - pad):
                 result_image[y][x][0] = image1[y][x][0]
-            result_point = homogeneous_transformation()
-
-
+            result_point = homogeneous_transformation
 if __name__ == '__main__':
 
     #  =======  part2 Q4 ==========
@@ -123,7 +116,7 @@ if __name__ == '__main__':
 
     # h = calculate_homography_matrix(points_1, points_2)
     # result_point = homogeneous_transformation(points_1, h)
-
+    
     # for i in range(len(result_point)):
     #     x, y = result_point[i][0], result_point[i][1]
     #     cv2.rectangle(image2, (x - 10, y - 10), (x + 10, y + 10), (0,255,0), 3)
@@ -131,7 +124,4 @@ if __name__ == '__main__':
     #     cv2.rectangle(image2, (x - 10, y - 10), (x + 10, y + 10), (255,0,0), 3)
     # plt.imshow(image2)
     # plt.show()
-<< << << < HEAD
-== == == =
-
->>>>>> > 260a131887b8ffb7b1a06e993d81343b393a32b9
+    
