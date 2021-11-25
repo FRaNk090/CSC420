@@ -3,9 +3,7 @@ from matplotlib.colors import PowerNorm
 import numpy as np
 from numpy import int32, linalg as LA
 import matplotlib.pyplot as plt
-from scipy import ndimage
 import mplcursors
-from numpy import linalg as LA
 
 
 def get_points_selected(gray1, gray2):
