@@ -40,7 +40,8 @@ def get_points_selected(gray1, gray2):
     plt.show()
     # Make sure that more than 4 pair of points are selectedl otherwise raise assertion error
     assert len(points_1) >= 4, 'You should select more than 4 points on figure 1'
-    assert len(points_2) >= 4, 'You should select more than 4 points on figure 2'
+    assert len(points_2) >= len(
+        points_1), 'You should select the same amount of points on figure 2'
     return points_1, points_2
 
 
@@ -106,7 +107,7 @@ def image_transformation(image1, image2, h):
     #             result_image[y][x][2] = image2[result_point[1]
     #                                            ][result_point[0]]
     #         print(result_image[y][x])
-    warpped = cv2.warpPerspective(image2, LA.inv(h) , (width, height))
+    warpped = cv2.warpPerspective(image2, LA.inv(h), (width, height))
     plt.imshow(warpped, cmap='gray')
     plt.show()
     result_image = np.zeros((height, width, 3), dtype=np.int32)
@@ -134,8 +135,9 @@ if __name__ == '__main__':
     image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2RGB)
     gray2 = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
     # points_1, points_2 = get_points_selected(gray1, gray2)
-    points_1 = [[1068, 234], [1071, 438], [1408, 90], [1332, 435]]
-    points_2 = [[925, 520], [944, 750], [1330, 357], [1235, 729]]
+    if case == 'A':
+        points_1 = [[1068, 234], [1071, 438], [1408, 90], [1332, 435]]
+        points_2 = [[925, 520], [944, 750], [1330, 357], [1235, 729]]
     print(points_1, points_2)
     h = calculate_homography_matrix(points_1, points_2)
     result_points = homogeneous_transformation(points_1, h)
