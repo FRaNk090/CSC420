@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from numpy import int32, linalg as LA
+from numpy import linalg as LA
 import matplotlib.pyplot as plt
 import mplcursors
 
@@ -47,10 +47,10 @@ def get_points_selected(gray1, gray2):
 def matrix_for_point(point1, point2):
     '''Given a pair of point, produce a 2 x 9 matrix.
         x, y, 1, 0, 0, 0, -x'x, -x'y, -x'
-        0, 0, 0, x, y, 1, -y'x, -y'y, -y
+        0, 0, 0, x, y, 1, -y'x, -y'y, -y'
     '''
     # return the matrix based on formula
-    res = np.array([[point1[0], point1[1], 1, 0, 0, 0, -point2[0] * point1[0], -point2[0] * point1[1], -point1[0]],
+    res = np.array([[point1[0], point1[1], 1, 0, 0, 0, -point2[0] * point1[0], -point2[0] * point1[1], -point2[0]],
                     [0, 0, 0, point1[0], point1[1], 1, -point2[1] * point1[0], -point2[1] * point1[1], -point2[1]]])
     return res
 
@@ -92,20 +92,29 @@ def homogeneous_transformation(points, h):
 
 def image_transformation(image1, image2, h):
     height, width = image1.shape
-    pad = 25
-    result_image = np.zeros(
-        (height + 2 * pad, width + 2 * pad, 3), dtype=int32)
-    for y in range(result_image.shape[0]):
-        for x in range(result_image.shape[1]):
-            if y in range(pad, result_image.shape[0] - pad) and x in range(pad, result_image.shape[1] - pad):
-                result_image[y][x][0] = image1[y - pad][x - pad]
-            result_point = homogeneous_transformation([[x, y]], h)[0]
-            if result_point[0] in range(image2.shape[1]) and result_point[1] in range(image2.shape[0]):
-                result_image[y][x][1] = image2[result_point[1]
-                                               ][result_point[0]]
-                result_image[y][x][2] = image2[result_point[1]
-                                               ][result_point[0]]
-            print(result_image[y][x])
+    # pad = 25
+    # result_image = np.zeros(
+    #     (height + 2 * pad, width + 2 * pad, 3), dtype=int32)
+    # for y in range(result_image.shape[0]):
+    #     for x in range(result_image.shape[1]):
+    #         if y in range(pad, result_image.shape[0] - pad) and x in range(pad, result_image.shape[1] - pad):
+    #             result_image[y][x][0] = image1[y - pad][x - pad]
+    #         result_point = homogeneous_transformation([[x, y]], h)[0]
+    #         if result_point[0] in range(image2.shape[1]) and result_point[1] in range(image2.shape[0]):
+    #             result_image[y][x][1] = image2[result_point[1]
+    #                                            ][result_point[0]]
+    #             result_image[y][x][2] = image2[result_point[1]
+    #                                            ][result_point[0]]
+    #         print(result_image[y][x])
+    warpped = cv2.warpPerspective(image2, LA.inv(h) , (width, height))
+    plt.imshow(warpped, cmap='gray')
+    plt.show()
+    result_image = np.zeros((height, width, 3), dtype=np.int32)
+    result_image[:, :, 0] = image1
+    result_image[:, :, 1] = warpped
+    result_image[:, :, 2] = warpped
+    plt.imshow(result_image)
+    plt.show()
     return result_image
 
 
@@ -124,9 +133,9 @@ if __name__ == '__main__':
     image2 = cv2.imread(f'./Q4/hallway{id2}.jpg')
     image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2RGB)
     gray2 = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
-    points_1, points_2 = get_points_selected(gray1, gray2)
-    # points_1 = [[1068, 234], [1071, 438], [1408, 90], [1332, 435]]
-    # points_2 = [[925, 520], [944, 750], [1330, 357], [1235, 729]]
+    # points_1, points_2 = get_points_selected(gray1, gray2)
+    points_1 = [[1068, 234], [1071, 438], [1408, 90], [1332, 435]]
+    points_2 = [[925, 520], [944, 750], [1330, 357], [1235, 729]]
     print(points_1, points_2)
     h = calculate_homography_matrix(points_1, points_2)
     result_points = homogeneous_transformation(points_1, h)
@@ -134,13 +143,13 @@ if __name__ == '__main__':
     image2_copy = image2.copy()
     for i in range(len(result_points)):
         x, y = result_points[i][0], result_points[i][1]
-        cv2.rectangle(image2_copy, (x - 10, y - 10),
-                      (x + 10, y + 10), (0, 255, 0), 3)
+        cv2.rectangle(image2_copy, (x - 15, y - 15),
+                      (x + 15, y + 15), (0, 255, 0), 3)
         x, y = points_2[i][0], points_2[i][1]
         cv2.rectangle(image2_copy, (x - 10, y - 10),
                       (x + 10, y + 10), (255, 0, 0), 3)
     plt.imshow(image2_copy)
     plt.show()
     result_image = image_transformation(gray1, gray2, h)
-    plt.imshow(result_image)
-    plt.show()
+    # plt.imshow(result_image)
+    # plt.show()
