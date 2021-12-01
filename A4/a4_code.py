@@ -1,5 +1,4 @@
 import cv2
-from matplotlib.colors import PowerNorm
 import numpy as np
 from numpy import int32, linalg as LA
 import matplotlib.pyplot as plt
