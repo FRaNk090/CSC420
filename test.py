@@ -2,70 +2,142 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy.lib.function_base import angle
 import cv2
-# cap = cv.VideoCapture(0)
-# ret, frame1 = cap.read()
-# prvs = cv.cvtColor(frame1, cv.COLOR_BGR2GRAY)
-# hsv = np.zeros_like(frame1)
-# hsv[..., 1] = 255
-# while(1):
-#     ret, frame2 = cap.read()
-#     next = cv.cvtColor(frame2, cv.COLOR_BGR2GRAY)
-#     flow = cv.calcOpticalFlowFarneback(
-#         prvs, next, None, 0.5, 3, 15, 3, 5, 1.2, 0)
-#     mag, ang = cv.cartToPolar(flow[..., 0], flow[..., 1])
-#     hsv[..., 0] = ang*180/np.pi/2
-#     hsv[..., 2] = cv.normalize(mag, None, 0, 255, cv.NORM_MINMAX)
-#     bgr = cv.cvtColor(hsv, cv.COLOR_HSV2BGR)
-#     cv.imshow('frame2', bgr)
-#     k = cv.waitKey(30) & 0xff
-#     if k == 27:
+
+
+# cap = cv2.VideoCapture(0) # camera feed
+cap = cv2.VideoCapture('./A4/Q4/q5.mp4')
+# capture one frame
+ret,frame = cap.read()
+
+# detect a face on the first frame
+face_detector = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml') 
+face_boxes = face_detector.detectMultiScale(frame) 
+
+if len(face_boxes)==0:
+    print('no face detected')
+    assert(False)
+
+# initialize the tracing window around the (first) detected face
+(x,y,w,h) = tuple(face_boxes[0]) 
+track_window = (x,y,w,h)
+
+#  region of interest for tracking
+roi = frame[y:y+h, x:x+w]
+
+# convert the roi to HSV so we can construct a histogram of Hue 
+hsv_roi =  cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
+# why do we need this mask? (remember the cone?)
+# read the description for Figure 3 in the original Cam Shift paper: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.7673 
+mask = cv2.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
+
+
+# form histogram of hue in the roi
+roi_hist = cv2.calcHist([hsv_roi],[0],mask,[180],[0,180])
+
+# normalize the histogram array values so they are in the min=0 to max=255 range
+cv2.normalize(roi_hist,roi_hist,0,255,cv2.NORM_MINMAX)
+
+# termination criteria for mean shift: 10 iteration or shift less than 1 pixel
+term_crit = ( cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1 )
+
+while True:
+    
+    # grab a frame
+    ret ,frame = cap.read() 
+    
+    if ret == True: 
+  
+        # convert to HSV
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        
+        # histogram back projection using roi_hist 
+        dst = cv2.calcBackProject([hsv],[0],roi_hist,[0,180],1)
+        
+        # use meanshift to shift the tracking window
+        ret, track_window = cv2.meanShift(dst, track_window, term_crit)
+        
+        # display tracked window
+        x,y,w,h = track_window
+        img = cv2.rectangle(frame, (x,y), (x+w,y+h), (0,0,255),5)
+        
+        cv2.imshow('mean shift tracking demo',img)
+        print('yes')
+        if cv2.waitKey(33) & 0xFF == 27: # wait a bit and exit is ESC is pressed
+            break
+        
+    else:
+        break
+        
+cv2.destroyAllWindows()
+cap.release()
+
+
+# cap = cv2.VideoCapture(0) # camera feed
+
+# # capture one frame
+# ret,frame = cap.read()
+
+# # detect a face on the first frame
+# face_detector = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml') 
+# face_boxes = face_detector.detectMultiScale(frame) 
+
+# if len(face_boxes)==0:
+#     print('no face detected')
+#     assert(False)
+
+# # initialize the tracing window around the (first) detected face
+# (x,y,w,h) = tuple(face_boxes[0]) 
+# track_window = (x,y,w,h)
+
+# #  region of interest for tracking
+# roi = frame[y:y+h, x:x+w]
+
+# # convert the roi to HSV so we can construct a histogram of Hue 
+# hsv_roi =  cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
+# # why do we need this mask? (remember the cone?)
+# # read the description for Figure 3 in the original Cam Shift paper: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.7673 
+# mask = cv2.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
+
+
+# # form histogram of hue in the roi
+# roi_hist = cv2.calcHist([hsv_roi],[0],mask,[180],[0,180])
+
+# # normalize the histogram array values so they are in the min=0 to max=255 range
+# cv2.normalize(roi_hist,roi_hist,0,255,cv2.NORM_MINMAX)
+
+# # termination criteria for mean shift: 10 iteration or shift less than 1 pixel
+# term_crit = ( cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1 )
+
+# while True:
+    
+#     # grab a frame
+#     ret ,frame = cap.read() 
+    
+#     if ret == True: 
+  
+#         # convert to HSV
+#         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        
+#         # histogram back projection using roi_hist 
+#         dst = cv2.calcBackProject([hsv],[0],roi_hist,[0,180],1)
+        
+#         # apply camshift to get the new location
+#         ret, track_window = cv2.CamShift(dst, track_window, term_crit)
+        
+#         # Draw it on image
+#         pts = cv2.boxPoints(ret)
+#         pts = np.int0(pts)
+#         img = cv2.polylines(frame,[pts],True, 255,2)
+
+#         cv2.imshow('cam shift tracking demo',img)
+        
+#         if cv2.waitKey(1) & 0xFF == 27: # wait 1 ms and exit is ESC is pressed
+#             break
+        
+#     else:
 #         break
-#     elif k == ord('s'):
-#         cv.imwrite('opticalfb.png', frame2)
-#         cv.imwrite('opticalhsv.png', bgr)
-#     prvs = next
-
-# image = cv2.imread('./A3/Q3/1.jpg')
-# gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-# print(gray.shape)
-# print(np.cos(np.pi / 2))
-# x_pos = [10, 10]
-# y_pos = [10, 10]
-# x_direct = [np.cos(np.pi / 6) * 30, np.cos(np.pi / 2) * 10]
-# y_direct = [np.sin(np.pi / 6) * 30, np.sin(np.pi / 2) * 10]
-
-# # plt.imshow(gray, cmap='gray')
-# plt.quiver(x_pos, y_pos, x_direct, y_direct, 1,
-#            headlength=0, headwidth=1, pivot='mid')
-
-# plt.show()
-
-
-def retriving_mag_and_angle(image):
-    gx = cv2.Sobel(image, cv2.CV_32F, 1, 0)
-    gy = cv2.Sobel(image, cv2.CV_32F, 0, 1)
-    # Calculate the magnitude and angle for sourc.e image
-    mag, angle = cv2.cartToPolar(gx, gy, angleInDegrees=True)
-    # Convert direct angle to indirect angle
-
-    # def convert_to_indirect_angle(x):
-    #     if x >= 165 and x < 345:
-    #         return x - 180
-    #     elif x >= 345:
-    #         return x - 360
-    #     else:
-    #         return x
-    # convert_to_indirect_angle = np.vectorize(convert_to_indirect_angle)
-    # angle = convert_to_indirect_angle(angle)
-    # Threshold magnitude
-    t = 0
-    threshold = np.vectorize(lambda x: x if x >= t else 0)
-    mag = threshold(mag)
-    # plt.imshow(mag, cmap='gray')
-    # plt.show()
-    return mag, angle
-
-
-a = np.array([1, 2])
-b = np.array([3, 4])
-print(a * b)
+        
+# cv2.destroyAllWindows()
+# cap.release()
