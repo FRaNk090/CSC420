@@ -103,9 +103,13 @@ while True:
             cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
         face_boxes = face_detector.detectMultiScale(frame)
 
+        # Store 0 when no faces are detected
         if len(face_boxes) == 0:
+            frames.append(i)
+            i += 1
+            iou_list.append(0.)
             print('no face detected')
-            assert(False)
+            continue
 
         iou_all_faces = []
         # Store largest iou value

@@ -22,22 +22,21 @@ track_window = (x, y, w, h)
 #  region of interest for tracking
 roi = frame[y:y+h, x:x+w]
 
-# convert the roi to HSV so we can construct a histogram of Hue
+# convert the roi to gray so we can construct a histogram of gradient angle of gray
 gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
 
 # Calculate derivatives
 gx = cv2.Sobel(gray_roi, cv2.CV_32F, 1, 0)
 gy = cv2.Sobel(gray_roi, cv2.CV_32F, 0, 1)
-# Calculate the magnitude and angle for sourc.e image
+# Calculate the magnitude and angle for source image
 mag, angle = cv2.cartToPolar(gx, gy, angleInDegrees=True)
 
 max_mag = np.max(mag)
-# why do we need this mask? (remember the cone?)
-# read the description for Figure 3 in the original Cam Shift paper: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.7673
 
+# Define the mask based on its gradient magnitude
 mask = cv2.inRange(mag, 0.05 * max_mag, float(max_mag))
-# form histogram of hue in the roi
 
+# form histogram of hue in the roi with 24 bins
 roi_hist = cv2.calcHist([angle], [0], mask, [24], [0, 360])
 
 # normalize the histogram array values so they are in the min=0 to max=255 range
@@ -48,6 +47,9 @@ term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
 
 
 def iou_calc(A, B):
+    '''Given two squares in form of (x, y, w, h), 
+       it will return the iou value
+    '''
     # rectangle A and B are defined as (x, y , w, h)
     A = [A[0], A[1], A[0] + A[2], A[1] + A[3]]
     B = [B[0], B[1], B[0] + B[2], B[1] + B[3]]
@@ -99,7 +101,7 @@ while True:
 
         gx = cv2.Sobel(gray, cv2.CV_32F, 1, 0)
         gy = cv2.Sobel(gray, cv2.CV_32F, 0, 1)
-        # Calculate the magnitude and angle for sourc.e image
+        # Calculate the magnitude and angle for source image
         mag, angle = cv2.cartToPolar(gx, gy, angleInDegrees=True)
 
         # histogram back projection using roi_hist
@@ -115,10 +117,11 @@ while True:
         if len(face_boxes) == 0:
             frames.append(i)
             i += 1
-            iou_list.append(0)
+            iou_list.append(0.)
             print('no face detected')
             continue
 
+        # Store largest iou value
         iou_all_faces = []
         for j in range(len(face_boxes)):
             iou = iou_calc((x, y, w, h), tuple(face_boxes[j]))
@@ -127,6 +130,8 @@ while True:
         iou_list.append(iou)
         x, y, w, h = tuple(face_boxes[np.argmax(iou_all_faces)])
         img = cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 5)
+
+        # Record the lowest match frame and highest match frame
         if iou < lowest_iou_value:
             lowest_iou_value = iou
             lowest_match_frame = img
@@ -135,6 +140,7 @@ while True:
             highest_iou_value = iou
             highest_match_frame = img
 
+        # Record the number of frames that are above threshold and below the threshold
         if iou < LOWER_THRESHOLD:
             num_below += 1
 
