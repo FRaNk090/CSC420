@@ -86,8 +86,10 @@ def homogeneous_transformation(points, h):
         # point.append(1)
         # point = np.array(point)
         # res = np.matmul(h, point)
-        x = (h[0][0] * point[0] + h[0][1] * point[1] + h[0][2]) / (h[2][0] * point[0] + h[2][1] * point[1] + h[2][2])
-        y = (h[1][0] * point[0] + h[1][1] * point[1] + h[1][2]) / (h[2][0] * point[0] + h[2][1] * point[1] + h[2][2])
+        x = (h[0][0] * point[0] + h[0][1] * point[1] + h[0][2]) / \
+            (h[2][0] * point[0] + h[2][1] * point[1] + h[2][2])
+        y = (h[1][0] * point[0] + h[1][1] * point[1] + h[1][2]) / \
+            (h[2][0] * point[0] + h[2][1] * point[1] + h[2][2])
         # result_point.append(np.round((res / res[2])[:2]).astype(int))
         result_point.append([int(round(x)), int(round(y))])
     return result_point
@@ -98,35 +100,37 @@ def image_transformation(image1, image2, h):
     result_image = np.zeros((height, width, 3), np.uint8)
     # for y in range(result_image.shape[0]):
     #     for x in range(result_image.shape[1]):
-            # if y in range(pad, result_image.shape[0] - pad) and x in range(pad, result_image.shape[1] - pad):
-            #     result_image[y][x][0] = image1[y - pad][x - pad]
-            # result_point = homogeneous_transformation([[x, y]], h)[0]
-            # if result_point[0] in range(image2.shape[1]) and result_point[1] in range(image2.shape[0]):
-            #     result_image[y][x][1] = image2[result_point[1]
-            #                                    ][result_point[0]]
-            #     result_image[y][x][2] = image2[result_point[1]
-            #                                    ][result_point[0]]
+    # if y in range(pad, result_image.shape[0] - pad) and x in range(pad, result_image.shape[1] - pad):
+    #     result_image[y][x][0] = image1[y - pad][x - pad]
+    # result_point = homogeneous_transformation([[x, y]], h)[0]
+    # if result_point[0] in range(image2.shape[1]) and result_point[1] in range(image2.shape[0]):
+    #     result_image[y][x][1] = image2[result_point[1]
+    #                                    ][result_point[0]]
+    #     result_image[y][x][2] = image2[result_point[1]
+    #                                    ][result_point[0]]
     result_image = np.zeros((height, width, 3), dtype=np.int32)
-    points_cord = [[x, y] for y in range(-500, height - 500) for x in range(-750, width - 750)]
+    points_cord = [[x, y] for y in range(-500, height - 500)
+                   for x in range(-750, width - 750)]
     # print(points_cord)
     result_points = np.array(homogeneous_transformation(points_cord, h))
-    
+
     for i, point in enumerate(result_points):
         if 0 <= point[0] < image2.shape[1] and 0 <= point[1] < image2.shape[0]:
 
             result_image[i // width][i % width][1] = image2[point[1]][point[0]]
             result_image[i // width][i % width][2] = image2[point[1]][point[0]]
-            
-    result_image[500: image1.shape[0] + 500, 750: image1.shape[1] + 750, 0] = image1
+
+    result_image[500: image1.shape[0] + 500,
+                 750: image1.shape[1] + 750, 0] = image1
     # def mapping(p):
-    #     if 
+    #     if
 
     # test_image = np.full((height, width), 255, dtype=np.uint8)
     # warpped = cv2.warpPerspective(test_image, h, (width, height))
     # warpped[0 : image2.shape[0], 0, : image2.shape[1]] = cv2.bitwise_and(warpped[0 : image2.shape[0], 0, : image2.shape[1]], image2)
     # # plt.imshow(warpped, cmap='gray')
     # # plt.show()
-    # # warpped = 
+    # # warpped =
     # result_image = np.zeros((height, width, 3), dtype=np.int32)
     # result_image[0: image1, :, 0] = image1
     # result_image[:, :, 1] = warpped
@@ -154,7 +158,7 @@ if __name__ == '__main__':
     #  =======  part2 Q4 ==========
     images = {'A': (1, 2), 'B': (1, 3), 'C': (1, 3)}
     # Cases can be defined here
-    case = 'C'
+    case = 'A'
     id1, id2 = images[case][0], images[case][1]
     # Read two images based on cases
     image1 = cv2.imread(f'./Q4/hallway{id1}.jpg')
@@ -166,14 +170,19 @@ if __name__ == '__main__':
     gray2 = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
     # points_1, points_2 = get_points_selected(gray1, gray2)
     if case == 'A':
-        points_1 = [[1069, 14], [1098, 177], [851, 462], [786, 587], [739, 374]]
-        points_2 = [[908, 331], [948, 487], [721, 776], [662, 910], [603, 704]]
+        # points_1 = [[1069, 14], [1098, 177], [
+        #     851, 462], [786, 587], [739, 374]]
+        # points_2 = [[908, 331], [948, 487], [721, 776], [662, 910], [603, 704]]
+        points_1 = [[821, 645], [950, 263], [
+            886, 231], [926, 141], [1097, 230]]
+        points_2 = [[700, 967], [807, 577], [742, 548], [777, 458], [948, 539]]
     elif case == 'B':
-        points_1 = [[1069, 14], [1098, 177], [851, 462], [786, 587], [739, 374]]
+        points_1 = [[1069, 14], [1098, 177], [
+            851, 462], [786, 587], [739, 374]]
         points_2 = [[940, 207], [965, 366], [830, 650], [791, 777], [761, 567]]
     elif case == 'C':
-        points_1 = [[839, 670], [804, 633], [714, 564], [650, 554], [597, 501], [486, 781], [537, 669]]
-        points_2 = [[825, 861], [803, 825], [744, 758], [686, 745], [652, 698], [522, 871], [424, 985]]
+        points_1 = [[997, 820], [821, 648], [501, 751], [571, 563], [657, 545]]
+        points_2 = [[922, 997], [817, 844], [449, 950], [595, 766], [693, 739]]
     print(points_1, points_2)
     h = calculate_homography_matrix(points_1, points_2)
     print(h)
@@ -190,5 +199,5 @@ if __name__ == '__main__':
     plt.imshow(image2_copy)
     plt.show()
     result_image = image_transformation(gray1, gray2, h)
-    # plt.imshow(result_image)
-    # plt.show()
+    plt.imshow(result_image)
+    plt.show()
