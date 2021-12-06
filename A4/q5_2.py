@@ -40,7 +40,7 @@ mask = cv2.inRange(mag, 0.05 * max_mag, float(max_mag))
 roi_hist = cv2.calcHist([angle], [0], mask, [24], [0, 360])
 
 # normalize the histogram array values so they are in the min=0 to max=255 range
-cv2.normalize(roi_hist, roi_hist, 0, 360, cv2.NORM_MINMAX)
+cv2.normalize(roi_hist, roi_hist, 0, 255, cv2.NORM_MINMAX)
 
 # termination criteria for mean shift: 10 iteration or shift less than 1 pixel
 term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
