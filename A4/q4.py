@@ -131,7 +131,7 @@ if __name__ == '__main__':
     image2 = cv2.imread(f'./Q4/hallway{id2}.jpg')
     image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2RGB)
     gray2 = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
-    # Uncomment the line below and comment line 136 - 146 to select points mannually
+    # Uncomment the line 135 and comment line 136 - 146 to select points manually
     # points_1, points_2 = get_points_selected(gray1, gray2)
     if case == 'A':
         points_1 = [[821, 645], [950, 263], [
@@ -150,6 +150,8 @@ if __name__ == '__main__':
     result_points = homogeneous_transformation(points_1, h)
 
     image2_copy = image2.copy()
+
+    # Draw rectangle on image
     for i in range(len(result_points)):
         x, y = result_points[i][0], result_points[i][1]
         cv2.rectangle(image2_copy, (x - 15, y - 15),

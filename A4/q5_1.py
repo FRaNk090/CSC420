@@ -41,7 +41,10 @@ term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
 
 
 def iou_calc(A, B):
-    # rectangle A and B are defined as (x, y , w, h)
+    '''Given two squares in form of (x, y, w, h), 
+       it will return the iou value
+    '''
+    # rectangle A and B are defined as (x, y, w, h)
     A = [A[0], A[1], A[0] + A[2], A[1] + A[3]]
     B = [B[0], B[1], B[0] + B[2], B[1] + B[3]]
     x_upper_left = max(A[0], B[0])
@@ -105,6 +108,7 @@ while True:
             assert(False)
 
         iou_all_faces = []
+        # Store largest iou value
         for j in range(len(face_boxes)):
             iou = iou_calc((x, y, w, h), tuple(face_boxes[j]))
             iou_all_faces.append(iou)
@@ -112,6 +116,7 @@ while True:
         iou_list.append(iou)
         x, y, w, h = tuple(face_boxes[np.argmax(iou_all_faces)])
         img = cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 5)
+        # Record the lowest match frame and highest match frame
         if iou < lowest_iou_value:
             lowest_iou_value = iou
             lowest_match_frame = img
@@ -120,6 +125,7 @@ while True:
             highest_iou_value = iou
             highest_match_frame = img
 
+        # Record the number of frames that are above threshold and below the threshold
         if iou < LOWER_THRESHOLD:
             num_below += 1
 
