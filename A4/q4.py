@@ -49,12 +49,12 @@ def show_points(img1, img2, points_1, points_2):
     ax = [None for _ in range(2)]
 
     ax[0] = fig.add_subplot(1, 2, 1)
-    ax[0].imshow(gray1, cmap='gray')
+    ax[0].imshow(img1, cmap='gray')
     for point in points_1:
         ax[0].plot(point[0], point[1], 'rs')
 
     ax[1] = fig.add_subplot(1, 2, 2)
-    ax[1].imshow(gray2, cmap='gray')
+    ax[1].imshow(img2, cmap='gray')
     for point in points_2:
         ax[1].plot(point[0], point[1], 'rs')
     plt.show()
@@ -72,7 +72,7 @@ def matrix_for_point(point1, point2):
 
 
 def calculate_homography_matrix(points_1, points_2):
-    '''Given two pairs of points to estimate h matrix
+    '''Given two groups of points to estimate h matrix
     '''
     # Make sure that the number of points in 2 groups are the same
     assert len(points_1) == len(points_2), "Number of points must be the same"
@@ -164,7 +164,7 @@ if __name__ == '__main__':
     image2 = cv2.imread(f'./Q4/hallway{id2}.jpg')
     image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2RGB)
     gray2 = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
-    # Uncomment the line 152 and comment line 153 - 163 to select points manually
+    # Uncomment the line 168 and comment lines 169 - 179 to select points manually
     # points_1, points_2 = get_points_selected(gray1, gray2)
     if case == 'A':
         points_1 = [[821, 645], [950, 263], [
