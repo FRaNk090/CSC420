@@ -132,15 +132,15 @@ def image_transformation(image1, image2, h):
     # Add some offset to image so every point will appear
     points_cord = [[x, y] for y in range(-500, height - 500)
                    for x in range(-750, width - 750)]
-
+    # Store the coordinates after applying homogeneous
     result_points = np.array(homogeneous_transformation(points_cord, h))
 
     for i, point in enumerate(result_points):
         if 0 <= point[0] < image2.shape[1] and 0 <= point[1] < image2.shape[0]:
-
+            # If in range, set the Green and Blue channel to be image 2
             result_image[i // width][i % width][1] = image2[point[1]][point[0]]
             result_image[i // width][i % width][2] = image2[point[1]][point[0]]
-
+    # Set the Red channel to be image 1
     result_image[500: image1.shape[0] + 500,
                  750: image1.shape[1] + 750, 0] = image1
 
