@@ -114,6 +114,7 @@ while True:
         x, y, w, h = track_window
         img = cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 5)
 
+        # Store 0 when no faces are detected
         if len(face_boxes) == 0:
             frames.append(i)
             i += 1

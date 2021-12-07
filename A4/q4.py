@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from numpy import linalg as LA, pi
+from numpy import linalg as LA
 import matplotlib.pyplot as plt
 import mplcursors
 
@@ -56,7 +56,7 @@ def matrix_for_point(point1, point2):
 
 
 def calculate_homography_matrix(points_1, points_2):
-    '''Given two pairs fo
+    '''Given two pairs of points to estimate h matrix
     '''
     # Make sure that the number of points in 2 groups are the same
     assert len(points_1) == len(points_2), "Number of points must be the same"
@@ -73,6 +73,23 @@ def calculate_homography_matrix(points_1, points_2):
     # Get the eigenvector of the smallest eigenvalue
     h = v[:, smallest_index].reshape((3, 3))
     return h
+
+
+def illustrate_effect(shape_1, m):
+    h, w = shape_1
+
+    white = np.zeros((h * 2, w * 2), dtype=np.uint8)
+    white[250: 250 + h, 500: 500 + w] = 255
+    warped = cv2.warpPerspective(white, m, (w * 2, h * 2))
+    fig = plt.figure(figsize=(12, 4), constrained_layout=True)
+    ax = [None for _ in range(2)]
+
+    ax[0] = fig.add_subplot(1, 2, 1)
+    ax[0].imshow(white, cmap='gray')
+
+    ax[1] = fig.add_subplot(1, 2, 2)
+    ax[1].imshow(warped, cmap='gray')
+    plt.show()
 
 
 def homogeneous_transformation(points, h):
@@ -121,7 +138,7 @@ if __name__ == '__main__':
     #  =======  part2 Q4 ==========
     images = {'A': (1, 2), 'B': (1, 3), 'C': (1, 3)}
     # Cases can be defined here
-    case = 'A'
+    case = 'C'
     id1, id2 = images[case][0], images[case][1]
     # Read two images based on cases
     image1 = cv2.imread(f'./Q4/hallway{id1}.jpg')
@@ -131,7 +148,7 @@ if __name__ == '__main__':
     image2 = cv2.imread(f'./Q4/hallway{id2}.jpg')
     image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2RGB)
     gray2 = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
-    # Uncomment the line 135 and comment line 136 - 146 to select points manually
+    # Uncomment the line 152 and comment line 153 - 154 to select points manually
     # points_1, points_2 = get_points_selected(gray1, gray2)
     if case == 'A':
         points_1 = [[821, 645], [950, 263], [
@@ -148,6 +165,8 @@ if __name__ == '__main__':
     h = calculate_homography_matrix(points_1, points_2)
 
     result_points = homogeneous_transformation(points_1, h)
+
+    illustrate_effect(gray1.shape, h)
 
     image2_copy = image2.copy()
 
