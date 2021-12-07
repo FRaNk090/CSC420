@@ -33,7 +33,7 @@ def get_points_selected(gray1, gray2):
             # print(gray1[sel.target_[1]][sel.target_[0]])
         elif sel.artist == b:
             points_2.append([x, y])
-            sel.annotation.set_text(f'x: {x}, y: {y} \npoint{len(points_2)}')
+            sel.annotation.set_text(f'x: {x}\ny: {y} \npoint{len(points_2)}')
     mplcursors.cursor(multiple=True).connect("add", on_click)
 
     plt.show()
@@ -42,6 +42,22 @@ def get_points_selected(gray1, gray2):
     assert len(points_2) >= len(
         points_1), 'You should select the same amount of points on figure 2'
     return points_1, points_2
+
+
+def show_points(img1, img2, points_1, points_2):
+    fig = plt.figure(figsize=(12, 4), constrained_layout=True)
+    ax = [None for _ in range(2)]
+
+    ax[0] = fig.add_subplot(1, 2, 1)
+    ax[0].imshow(gray1, cmap='gray')
+    for point in points_1:
+        ax[0].plot(point[0], point[1], 'rs')
+
+    ax[1] = fig.add_subplot(1, 2, 2)
+    ax[1].imshow(gray2, cmap='gray')
+    for point in points_2:
+        ax[1].plot(point[0], point[1], 'rs')
+    plt.show()
 
 
 def matrix_for_point(point1, point2):
@@ -148,7 +164,7 @@ if __name__ == '__main__':
     image2 = cv2.imread(f'./Q4/hallway{id2}.jpg')
     image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2RGB)
     gray2 = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
-    # Uncomment the line 152 and comment line 153 - 154 to select points manually
+    # Uncomment the line 152 and comment line 153 - 163 to select points manually
     # points_1, points_2 = get_points_selected(gray1, gray2)
     if case == 'A':
         points_1 = [[821, 645], [950, 263], [
@@ -162,7 +178,12 @@ if __name__ == '__main__':
         points_1 = [[997, 820], [821, 648], [501, 751], [571, 563], [657, 545]]
         points_2 = [[922, 997], [817, 844], [449, 950], [595, 766], [693, 739]]
 
+    print(f'selected points for figure 1 are {points_1}')
+    print(f'selected points for figure 2 are {points_2}')
+    show_points(gray1, gray2, points_1, points_2)
+
     h = calculate_homography_matrix(points_1, points_2)
+    print(f'h is {h}')
 
     result_points = homogeneous_transformation(points_1, h)
 
