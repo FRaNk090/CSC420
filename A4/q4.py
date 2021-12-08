@@ -156,7 +156,7 @@ if __name__ == '__main__':
     # Cases can be defined here
     case = 'C'
     id1, id2 = images[case][0], images[case][1]
-    # Read two images based on cases
+    # Read two images based on case
     image1 = cv2.imread(f'./Q4/hallway{id1}.jpg')
     image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2RGB)
     gray1 = cv2.cvtColor(image1, cv2.COLOR_RGB2GRAY)
